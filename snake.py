@@ -10,13 +10,14 @@ from api import (
     update_grid_values,
     update_status
 )
-from food import insert_food_to_grid
-from grid import STARTING_GRID
+from grid import (
+    STARTING_GRID,
+    insert_food_to_grid
+)
 from movement import (
-    move_head,
+    move,
     find_head_coord
 )
-from rules import is_alive
 
 GOOGLE_CLIENT = get_client()
 WORKSHEET = get_worksheet(GOOGLE_CLIENT, 'SheetSnake', 'SheetSnake')
@@ -27,16 +28,12 @@ def snake():
     update_status(WORKSHEET, 'Starting new game...')
     time.sleep(5)
 
-    print('Changing direction to l')
-    update_direction(WORKSHEET, 'l')
+    print('Changing direction to a')
+    update_direction(WORKSHEET, 'a')
 
     print('Updating grid for new game.')
-    # starting_grid_with_food = insert_food_to_grid(STARTING_GRID)
-    # update_grid_values(WORKSHEET, starting_grid_with_food)
-    # current_grid = deepcopy(starting_grid_with_food)
-
-    update_grid_values(WORKSHEET, STARTING_GRID)
-    current_grid = deepcopy(STARTING_GRID)
+    starting_grid_with_food = insert_food_to_grid(STARTING_GRID)
+    update_grid_values(WORKSHEET, starting_grid_with_food)
 
     print('Starting countdown.')
     update_status(WORKSHEET, 'Starting in 3...')
@@ -49,17 +46,26 @@ def snake():
     time.sleep(1)
     update_status(WORKSHEET, 'Playing')
 
+    current_grid = deepcopy(starting_grid_with_food)
+    head_history = [find_head_coord(current_grid)]
+    length = 1
+    alive = True
+
     print('Starting game while loop.')
-    # movement_history = []
-    while(is_alive(current_grid)):
+    while(alive):
         current_direction = get_direction(WORKSHEET)
-        # new_grid = move_head(current_direction, current_grid, movement_history)
-        new_grid = move_head(current_direction, current_grid)
-        # movement_history = [find_head_coord(current_grid)] + movement_history
+
+        move_data = move(current_direction, current_grid, head_history, length)
+        new_grid = move_data['new_grid']
+        head_history = move_data['head_history']
+        length = move_data['length']
+        alive = move_data['alive']
+        reason = move_data['reason']
+
         update_grid_values(WORKSHEET, new_grid)
         current_grid = get_grid_values(WORKSHEET)
 
-    update_status(WORKSHEET, 'GAME OVER!')
+    update_status(WORKSHEET, reason)
 
     print('Updating grid for new game.')
     update_grid_values(WORKSHEET, STARTING_GRID)
