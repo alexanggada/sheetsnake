@@ -1,3 +1,4 @@
+from pprint import pprint
 from copy import deepcopy
 
 
@@ -11,8 +12,7 @@ def move(direction, last_grid, head_history, length):
             'new_grid': last_grid,
             'head_history': head_history,
             'length': length,
-            'alive': False,
-            'reason': 'Death by self-eating!'
+            'alive': False
         }
 
     if direction == 'w':
@@ -47,29 +47,34 @@ def moving(last_grid, head_history, length):
             'new_grid': new_grid,
             'head_history': head_history,
             'length': length,
-            'alive': False,
-            'reason': 'Death by out-of-bounds!'
+            'alive': False
         }
     
     # Eating
     if next_val == 'f':
         length = length + 1
 
+    snake_coords = head_history[:length]
+    empty_coords = head_history[length:]
+
     # Making the body
     new_grid[next_row][next_col] = 'h'
-    for body_row, body_col in head_history[1:length]:
+    for body_row, body_col in snake_coords[1:]:
         new_grid[body_row][body_col] = 'b'
 
     # Making the empty space
-    for empty_row, empty_col in head_history[length:]:
-        new_grid[empty_row][empty_col] = ''
+    for empty_coord in empty_coords:
+        if empty_coord in snake_coords:
+            pass
+        else:
+            empty_row, empty_col = empty_coord
+            new_grid[empty_row][empty_col] = ''
 
     return {
         'new_grid': new_grid,
         'head_history': head_history,
         'length': length,
-        'alive': True,
-        'reason': ''
+        'alive': True
     }
 
 

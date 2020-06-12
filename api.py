@@ -19,27 +19,31 @@ def get_worksheet(client, spreadsheet_name, worksheet_name):
 
 
 def get_grid_values(worksheet):
-    return worksheet.batch_get(['C2:N13'])[0]
+    return worksheet.batch_get(['B4:M15'])[0]
 
 
 def update_grid_values(worksheet, values):
     worksheet.batch_update([{
-        'range': 'C2:N13',
+        'range': 'B4:M15',
         'values': values
     }])
 
 
-def get_status(worksheet):
-    return worksheet.get('A4')[0][0]
-
-
 def update_status(worksheet, new_status):
-    return worksheet.update_acell('A4', new_status)
+    return worksheet.update_acell('H17', new_status)
+
+
+def get_score(worksheet):
+    return worksheet.get('H18')[0][0]
+
+
+def update_score(worksheet, new_score):
+    return worksheet.update_acell('H18', new_score)
 
 
 def get_direction(worksheet):
-    return worksheet.get('A13')[0][0]
+    return worksheet.get('H19')[0][0]
 
 
 def update_direction(worksheet, new_direction):
-    return worksheet.update_acell('A13', new_direction)
+    return worksheet.update_acell('H19', new_direction)
