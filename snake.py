@@ -19,7 +19,7 @@ from movement import (
 )
 
 GOOGLE_CLIENT = get_client()
-WORKSHEET = get_worksheet(GOOGLE_CLIENT, 'SheetSnake', 'Arcade_Theme')
+WORKSHEET = get_worksheet(GOOGLE_CLIENT, 'SheetSnake', 'arcade_theme')
 
 
 def snake():
@@ -79,8 +79,10 @@ def countdown(WORKSHEET):
 def debug(head_history, length, current_grid):
     from pprint import pprint
 
+    print('head_history')
     print(head_history)
+    print('length')
     print(length)
-    print('New grid:')
+    print('current_grid')
     pprint(current_grid)
     print('\n')
